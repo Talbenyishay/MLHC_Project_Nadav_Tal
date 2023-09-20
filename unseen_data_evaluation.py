@@ -1,9 +1,12 @@
 import pandas as pd
 from google.cloud import bigquery
 import pickle
+import os
+import warnings
+os.chdir(os.path.dirname(__file__))
+warnings.filterwarnings('ignore')
 from models import *
 from preprocessing import *
-
 
 def target_prediction(subject_ids, target, client):
     full_df = get_full_dataset(subject_ids, target, client)
@@ -38,10 +41,4 @@ def run_pipeline_on_unseen_data(subject_ids, client):
     results = pd.DataFrame(index=subject_ids).reset_index().rename(columns={"index": "subject_id"})
     for target in ["mortality", "prolonged_LOS", "readmission"]:
         results = results.merge(target_prediction(subject_ids, target, client), on="subject_id", how="left")
-        print(results)
     return results
-
-
-if __name__ == "__main__":
-    subject_ids_test = pd.read_csv(r"test_example.csv")["subject_id"].to_list()
-    run_pipeline_on_unseen_data(subject_ids_test, bigquery.Client(project="virtual-stratum-384310"))

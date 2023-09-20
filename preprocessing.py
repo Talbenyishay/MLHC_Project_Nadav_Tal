@@ -17,7 +17,7 @@ PRED_FREQ = '6H'  # frequency for time discretization
 
 def get_age(admittime, dob):
     if admittime < dob:
-      return 0
+        return 0
     return admittime.year - dob.year - ((admittime.month, admittime.day) < (dob.month, dob.day))
 
 
@@ -116,7 +116,7 @@ def retrieve_microbiology(valid_hadm_ids, client=bigquery.Client(project="virtua
             AND micro.hadm_id = admissions.hadm_id
             AND
             (lower(micro.org_name) like '%mycobacterium tuberculosis%'
-  
+
             OR lower(micro.org_name) like '%pneumonia%'
             OR lower(micro.org_name) like '%staphylococcus aureus%'
             OR lower(micro.org_name) like '%haemophilus influenza%'
@@ -253,7 +253,7 @@ def retrieve_vitals(valid_hadm_ids, client=bigquery.Client(project="virtual-stra
     vitquery = \
         """--sql
         -- Vital signs include heart rate, blood pressure, respiration rate, and temperature
-    
+
           SELECT chartevents.subject_id ,chartevents.hadm_id ,chartevents.charttime
           , chartevents.itemid, chartevents.valuenum
           , admissions.admittime
@@ -339,6 +339,3 @@ def get_full_dataset(subject_ids, target, client=bigquery.Client(project="virtua
         clusters_diagnosis = get_features_for_readmission(list(full_df["diagnosis"].unique()))
         full_df = full_df.merge(clusters_diagnosis, on="diagnosis")
     return full_df
-
-
-
